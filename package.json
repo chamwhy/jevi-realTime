@@ -2,6 +2,7 @@
   "name": "jevi-realtime",
   "version": "1.0.0",
   "description": "",
+  "start": "node app.js",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
