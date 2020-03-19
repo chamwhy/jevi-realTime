@@ -4,8 +4,49 @@ function start(){
   let username_j = window.user ? window.user.username : '';
 
   socket_j.on('connect', ()=>{
-    alert('connet to jevi-realTime');
+    console.log('connet to jevi-realTime');
     setEntryBlocks();
+    if(Entry.variableContainer.getListByName(".jeviLog") != undefined){
+      Entry.variableContainer.getListByName(".jeviLog").appendValue("start");
+    }
+  });
+
+  socket_j.on('join', (room, joinUser) => {
+    if(Entry.variableContainer.getListByName(".jeviUser") != undefined){
+      Entry.variableContainer.getListByName(".jeviUser").appendValue(joinUser);
+    }
+  });
+  socket_j.on('leave', (room, leaveUser) => {
+    if(Entry.variableContainer.getListByName(".jeviUser") != undefined){
+      for(let i = 0; i < Entry.variableContainer.getListByName(".jeviUser").array_.length; i++){
+        if(Entry.variableContainer.getListByName(".jeviUser").array_[i].data == leaveUser){
+          Entry.variableContainer.getListByName(".jeviUser").deleteValue(i);
+        }
+      }
+    }
+  });
+  socket_j.on('set_variable', (room, data) => {
+    if(Entry.variableContainer.getVariableByName(data.varName) != undefined){
+      Entry.variableContainer.getVariableByName(data.varName).setValue(data.value);
+    }
+  });
+  socket_j.on('set_list', (room, data) => {
+    let list = Entry.variableContainer.getListByName(data.listName);
+    if(list != undefined){
+      if(data.value != null){
+        if(!data.isDel){
+          if(data.index == -1){
+            list.appendValue(data.value);
+          }else{
+            list.insertValue(data.index, data.value);
+          }
+        }else{
+          list.replaceValue(data.index, data.value);
+        }
+      }else{
+        list.deleteValue(data.index);
+      }
+    }
   });
 }
 
