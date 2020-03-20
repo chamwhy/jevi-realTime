@@ -57,6 +57,7 @@ function reset(){
     for(let i = 0; i < setList_j.array_.length; i++){
       lists_j.push(setList_j.array_[i].data);
     }
+    console.log("start");
     start();
   }
 }
